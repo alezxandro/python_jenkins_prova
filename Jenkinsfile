@@ -4,28 +4,30 @@ pipeline {
         stage("Download") {
             steps {
                 cleanWs()
-                sh "apt install python3 python3-flask"
-                sh "mkdir app"
-                sh "cd app"
-                sh "wget https://raw.githubusercontent.com/alezxandro/python_jenkins_prova/refs/heads/main/webpage.py -O script.py"
+                sh """
+                    sudo apt update
+                    sudo apt install -y python3 python3-flask
+                    mkdir app
+                    cd app
+                    wget https://raw.githubusercontent.com/alezxandro/python_jenkins_prova/main/webpage.py -O script.py
+                """
             }
         }
         stage("TEST File") {
             steps {
-                sh "cd app"
-                sh "ls app"
-                input "vado?"
+                sh "ls -la app" // Controlla se il file esiste nella cartella corretta
+                input "Vado avanti?"
             }
         }
-        stage("TEST App"){
+        stage("TEST App") {
             steps {
-                sh "python3 script.py"
-                input "vado?"
+                sh "python3 app/script.py" // Esegue il file dal percorso corretto
+                input "Vado avanti?"
             }
         }
         stage("Done") {
             steps {
-                echo "Applicativo funzionante"
+                echo "Applicativo funzionante ✅"
             }
         }
     }
